@@ -2,30 +2,37 @@ from flask import Flask, render_template, request, make_response
 import requests
 import json
 import pandas as pd
-import plotly.express as px
 import random
+
+# Skapar Flask-applikationen
 app = Flask(__name__)
 
 @app.route("/")
 def index():
+    """Visar startsidan."""
     return render_template("main.html")
 
 @app.route("/form")
 def form():
+    """Visar formulärsidan för väder, med senaste stad från cookies."""
     last_city = request.cookies.get("last_city", "")
     return render_template("form.html", last_city=last_city)
 
 @app.route("/form2")
 def form2():
+    """Visar formulärsidan för recept, med senaste måltid från cookies."""
     last_meal = request.cookies.get("last_meal", "")
     return render_template("form2.html", last_meal=last_meal)
 
 @app.errorhandler(404)
 def page_not_found(e):
+    """Visar en 404-sida när sidan inte hittas."""
     return render_template('404.html'), 404
 
 @app.route("/api/weather", methods=["POST"])
 def api_weather():
+    """Hämtar väderdata från OpenWeatherMap baserat på användarens stad."""
+
     try:
         city_name = request.form["cityname"]
         data_url = f"https://api.openweathermap.org/data/2.5/weather?q={city_name}&appid=95fccd7b6adddb581a8319f61f3b71ff&units=metric"
@@ -39,7 +46,7 @@ def api_weather():
             "Condition": data["weather"][0]["main"],
             "Description": data["weather"][0]["description"]
         }
-        # Skapa DataFrame
+        # Skapar DataFrame
         df = pd.DataFrame([weather_info])
         table_data = df.to_html(
             columns=["City", "Temperature (°C)", "Condition", "Description"],
@@ -55,7 +62,8 @@ def api_weather():
 
 @app.route("/api/recipe", methods=["POST"])
 def api_recipe():
-    """Funktionen """
+    """Hämtar receptdata från TheMealDB baserat på användarens måltid."""
+
     try:
         meal_name = request.form["mealname"]
         data_url = f"https://www.themealdb.com/api/json/v1/1/search.php?s={meal_name}"
@@ -95,6 +103,8 @@ def api_recipe():
     
 @app.route("/api/combo", methods=["POST"])
 def api_combo():
+    """Kombinerar väderdata med receptförslag baserat på temperatur och vädertyp."""
+
     try:
         # Hämtar stad från formuläret
         city_name = request.form["cityname"]
@@ -152,10 +162,6 @@ def api_combo():
         return resp
     except Exception as e:
         return f"Något gick fel i kombinerad hämtning: {e}"
-    
-@app.errorhandler(404)
-def page_not_found(e):
-    return render_template('404.html'), 404
     
 
 if __name__ == "__main__":
