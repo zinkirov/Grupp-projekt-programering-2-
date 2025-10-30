@@ -1,0 +1,47 @@
+{% extends "layout.html"%}
+{% block title %}a{% endblock %}
+{% block content %}
+<style>
+  .fullscreen-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    z-index: -2;
+  }
+
+  .content-wrapper {
+    position: relative;
+    z-index: 1;
+    color: black;
+    padding-top: 0px;
+  }
+</style>
+
+<img src="{{ url_for('static', filename='images/ha.jpg') }}" class="fullscreen-bg">
+<div class="content-wrapper">
+  <div class="text-center">
+    <h2> Skriv in maträtten </h2>
+  </div>
+  <div class="text-center">
+    <div class="container">
+      <div class="row">
+        <div class="column">
+          <form action="/api/recipe" method="post">
+            <label for="mealname"></label>
+            <input type="text" name="mealname" value="{{last_meal|safe}}">
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% if data %}
+  <div class="mt-4">
+    {{ data|safe }}
+  </div>
+  {% endif %}
+  {% endblock %}

@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+{% block title %}Start{% endblock %}
+
+{% block content %}
+<style>
+  .fullscreen-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    z-index: -2;
+  }
+  .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: -1;
+  }
+  .content-wrapper {
+    position: relative;
+    z-index: 1;
+    color: white;
+    padding-top: 100px;
+  }
+</style>
+
+<img src="{{ url_for('static', filename='images/haj.jpg') }}" class="fullscreen-bg">
+<div class="overlay"></div>
+
+<div class="container-fluid text-center content-wrapper">
+  <h1>Välkommen till hemsidan!</h1>
+  <h2>Sök maträtter nu.</h2>
+  <a class="btn btn-primary mt-5" href="form" role="button">Start</a>
+  <p>{{ data|safe }}</p>
+</div>
+{% endblock %}

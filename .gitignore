@@ -1,0 +1,11 @@
+# Ignorera virtuella miljöer
+venv/
+
+
+
+# Ignorera loggfiler
+*.log
+
+# Ignorera Python-cache
+__pycache__/
+*.pyc
